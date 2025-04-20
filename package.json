@@ -1,11 +1,23 @@
 {
   "name": "backend",
-  "version": "1.0.0",
   "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node server.js"
   },
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "server.js"
+    }
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
