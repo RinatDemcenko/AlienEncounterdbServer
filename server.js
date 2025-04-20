@@ -8,7 +8,6 @@ dotenv.config();
 
 const app = express();
 
-// process.env.X - premenne z vercel 
 async function initializePool() {
   const pool = await mysql.createPool({
     host: process.env.DB_HOST,
@@ -38,11 +37,9 @@ let pool;
   }
 })();
 
-// Middleware
 app.use(express.json());
 app.use(cors());
 
-// Маршруты
 app.get("/", (req, res) => {
   res.send("Server spusteny!");
 });
