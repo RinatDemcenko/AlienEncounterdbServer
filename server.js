@@ -40,11 +40,7 @@ let pool;
 
 // Middleware
 app.use(express.json());
-app.use(cors({
-  origin: ['https://rinatdemcenko.github.io', "https://localhost:5173"],
-  methods: ['GET', 'POST'], 
-  allowedHeaders: ['Content-Type'] 
-}));
+app.use(cors());
 
 // Маршруты
 app.get("/", (req, res) => {
