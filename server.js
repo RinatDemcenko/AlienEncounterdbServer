@@ -81,10 +81,12 @@ app.get("/api/mostVisited", async (req, res) => {
     const [rows] = await pool.query(
       `
         SELECT 
-          location_name,
-          COUNT(*) as total_observations
-        FROM observations
-        GROUP BY location_name
+          o.location_name,
+          COUNT(*) as total_observations,
+          COUNT(DISTINCT o.species_id) as unique_species_count
+        FROM observations o
+        JOIN species s ON o.species_id = s.id
+        GROUP BY o.location_name
         ORDER BY total_observations ${order}
         LIMIT ?;
       `,
