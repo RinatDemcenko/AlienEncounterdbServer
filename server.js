@@ -169,7 +169,9 @@ app.post("/api/register", async (req, res) => {
     const password_hash = await bcrypt.hash(password, 10);
 
     if (!username || !email || !password) {
-      return res.status(400).json({ signUpError: "Prosím, vyplňte všetky polia" });
+      return res
+        .status(400)
+        .json({ signUpError: "Prosím, vyplňte všetky polia" });
     }
 
     const [result] = await pool.query(
@@ -228,14 +230,24 @@ app.post("/api/reportUfoSighting", async (req, res) => {
   try {
     const { location, shipType, encounterDate, speciesId, userId } = req.body;
 
-    if (!location || !shipType || !encounterDate || !speciesId || !userId) {
-      return res.status(400).json({ error: "Všetky polia sú povinné" });
+    if (
+      !location ||
+      !shipType ||
+      !encounterDate ||
+      !speciesId ||
+      !userId ||
+      userId === 1
+    ) {
+      return res
+        .status(400)
+        .json({
+          error: "Všetky polia sú povinné a používateľ musí byť prihlášený",
+        });
     }
 
-    const [userCheck] = await pool.query(
-      "SELECT id FROM users WHERE id = ?",
-      [userId]
-    );
+    const [userCheck] = await pool.query("SELECT id FROM users WHERE id = ?", [
+      userId,
+    ]);
     if (userCheck.length === 0) {
       return res.status(401).json({ error: "Neplatný používateľ" });
     }
@@ -254,7 +266,7 @@ app.post("/api/reportUfoSighting", async (req, res) => {
         `,
         [encounterDate, location, shipType, userId]
       );
-      return res.status(200).json({ message: "Hlásenie bolo aktualizované"});
+      return res.status(200).json({ message: "Hlásenie bolo aktualizované" });
     } else {
       await pool.query(
         `
